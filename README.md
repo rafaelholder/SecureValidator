@@ -1,10 +1,10 @@
-# 🔐 SecureValidator
+# SecureValidator
 
 **SecureValidator** é um sistema simples de gerenciamento de usuários com foco em **armazenamento seguro de senhas** usando hashing (`bcrypt`) e persistência de dados com **SQLite**. Ideal para estudos e projetos de segurança cibernética.
 
 ---
 
-## 📦 Funcionalidades
+## Funcionalidades
 
 - Registro de usuários com e-mail e senha
 - Armazenamento seguro das senhas (bcrypt + salt)
@@ -14,7 +14,7 @@
 
 ---
 
-## 🛠️ Tecnologias utilizadas
+## 🛠 Tecnologias utilizadas
 
 - Python 3.10+
 - [bcrypt](https://pypi.org/project/bcrypt/)
@@ -22,7 +22,7 @@
 
 ---
 
-## 🚀 Como executar
+## Como executar
 
 ### 1. Clone o repositório
 
