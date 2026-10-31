@@ -1,39 +1,48 @@
-from os import path
+import os
 import sqlite3
+from getpass import getpass
 from utils import password_hashing
 
+DB_PATH = "./data/users.db"
 
 
 def create():
-    create_database()
-    senha = input("Digite sua senha: ")
-    email = input("Digite seu email: ")
+    email = input("Digite seu email: ").strip()
+    # getpass não mostra a senha no terminal enquanto ela é digitada
+    senha = getpass("Digite sua senha: ")
+
+    if register(email, senha):
+        print("Usuário registrado com sucesso!")
+    else:
+        print("Erro: email já está registrado.")
+
+
+def register(email: str, senha: str, db_path: str = DB_PATH) -> bool:
+    create_database(db_path)
     # Criptografa a senha
     hashed_password = password_hashing.hash(senha)
 
-    conn = sqlite3.connect("./data/users.db")
-    cursor = conn.cursor()
-    
+    conn = sqlite3.connect(db_path)
     try:
-        cursor.execute("INSERT INTO users (email, senha_hash) VALUES (?, ?)", (email, hashed_password))
+        conn.execute("INSERT INTO users (email, senha_hash) VALUES (?, ?)", (email, hashed_password))
         conn.commit()
-        print("Usuário registrado com sucesso!")
+        return True
     except sqlite3.IntegrityError:
-        print("Erro: email já está registrado.")
+        return False
     finally:
         conn.close()
 
-def create_database():
-    if not path.exists("./data"):
-        path.makedirs("./data")
-    conn = sqlite3.connect("./data/users.db")
-    cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            email TEXT PRIMARY KEY,
-            senha_hash BLOB
-        )   
-    """)
-    conn.commit()
-    conn.close()
-    print("Banco de dados criado com sucesso!")
+
+def create_database(db_path: str = DB_PATH):
+    os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
+    conn = sqlite3.connect(db_path)
+    try:
+        conn.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                email TEXT PRIMARY KEY,
+                senha_hash TEXT NOT NULL
+            )
+        """)
+        conn.commit()
+    finally:
+        conn.close()

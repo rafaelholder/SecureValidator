@@ -1,4 +1,3 @@
-from os import makedirs 
 from utils import create_account, login
 
 if __name__ == "__main__":
